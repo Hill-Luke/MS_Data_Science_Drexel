@@ -87,34 +87,31 @@ lotr_words<-lotr %>% unnest_tokens(word, text)
 lotr_words<-lotr_words %>% anti_join(get_stopwords())
 book_words <- lotr_words  
 book_words$chapter<-NULL 
-book_words<-count(book_words)
+book_words<-book_words %>% count(book, word, sort=T) 
+book_words$book <-as.factor(book_words$book)
 
-total_words <- lotr_words  %>% group_by(book) %>% count()
-total_words$chapter<-NULL 
-total_words$word<-NULL 
-total_words$book<-as.factor(total_words$book)
-total_words<-total_words %>% dplyr::group_by(book) %>% summarize(total = sum(freq))
-total_words<-aggregate(total_words$freq, by=list(total_words$book), FUN=sum)
-total_words$book<-total_words$Group.1
-total_words$total<-total_words$x
-total_words$Group.1<-NULL
-total_words$x<-NULL
 
+# Getting all words in each book
+total_words <- book_words %>% group_by(book) %>% summarize('total'=sum(n))
 book_words <- left_join(book_words, total_words) 
 
 
+ggplot(book_words, aes(n/total, fill = book)) +
+  geom_histogram(show.legend = FALSE) +
+  xlim(NA, 0.0009) +
+  facet_wrap(~book, ncol = 2, scales = "free_y")
 
 # Rank Frequency
 #################################################
 
 freq_by_rank <- book_words %>% 
   group_by(book) %>% 
-  dplyr::mutate(rank = row_number(), `term frequency` = freq/total) %>%
+  dplyr::mutate(rank = row_number(), `term frequency` = n/total) %>%
   ungroup()
 
 
 book_tf_idf <- book_words %>%
-  bind_tf_idf(word, book, freq)
+  bind_tf_idf(word, book, n)
 
 
 # Ngram analysis for Fellowship of the Ring 
@@ -158,45 +155,3 @@ fellow_tf<-book_tf_idf %>% filter(book=="The Fellowship of the Ring") %>% filter
 # Subsetting the correlations list to only those words that appear in the term frequency list
 fellow_cor<-word_cors %>% filter(item1 %in% fellow_tf$word)
 
-
-
-
-
-# Network
-##################################################################
-lotr_net<-read_csv("C:/Users/lukeh/OneDrive/Desktop/Grad School/LOTR_text/networks-id-3books.csv")
-library(XML)
-library(xml2)
-structure_v1<-read_xml("C:/Users/lukeh/OneDrive/Desktop/Grad School/LOTR_text/Tolkien_LotR_volume1_woText.xml")
-parsed<-xmlParse(structure_v1)
-xml_structure(structure_v1)
-xml_find_all(structure_v1, "type")
-all_data <- xml_text(structure_v1)
-
-
-# Unique List of all nodes
-nodes1<-lotr_net$IdSource
-nodes2<-lotr_net$IdTarget
-nodes<-c(nodes1,nodes2) %>% unique()
-nodes<-data.frame(nodes)
-
-# Edge list already exists
-edges<-select(lotr_net, IdSource, IdTarget, Weight)
-
-
-#Creating a simplified network object
-G <- network(edges,
-             vertex.attr = nodes,
-             matrix.type = "edgelist",
-             ignore.eval = FALSE)
-
-G2<-graph_from_data_frame(edges,directed=T,vertices=nodes)
-plot(G2)
-# Removing one off nodes
-single_connection = which(degree(G2)==1)
-G3 = igraph::delete.vertices(G2, single_connection)
-plot(G3)
-# Still very large
-few_connections = which(degree(G3) %in% c(0,1,2,3,4,5))
-G4 = igraph::delete.vertices(G3, few_connections)
-plot(G4)
