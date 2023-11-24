@@ -8,19 +8,20 @@ Make sure to install the required libraries before running the script:
 
 ```bash
 pip install requests pandas python-decouple
-
+```
 # Usage
 
 Set up your environment variables by creating a .env file with the following:
 
 1. Set up your environment by creating a `.env` file with the following:
+```
 	jambase_api=your_jambase_api_key
 	last_fm_api=your_last_fm_api_key
-
+```
 2. Run the script:
 ```bash
 python LH_Final_Project.py
-
+```
 # Description
 
 The script does the following:
