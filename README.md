@@ -4,3 +4,4 @@ This repo contains projects related to my graduate school work and other fun pro
 Projects include:
 - Social Network Analysis of the Marvel Comics Universe
 - Text Mining the Lord of the Rings Trilogy
+- Creating a structured dataset from Jambase and Last.fm APIs
