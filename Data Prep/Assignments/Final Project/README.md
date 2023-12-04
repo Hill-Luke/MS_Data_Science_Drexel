@@ -6,17 +6,17 @@ This Python script retrieves concert data from the Jambase API in the state of T
 
 __Scipt Summary:__
 
-    This program pulls information about upcoming live music events from Jambase at the state-level. For demo purposes, I have set the geography to my home state of Texas--however future users can change the state geography to their liking. I have configured the program with a masked API key for security purposes, so future users will need to create a .env file in the same folder as the program to run appropriately (see usage instructions for more details.)
+This program pulls information about upcoming live music events from Jambase at the state-level. For demo purposes, I have set the geography to my home state of Texas--however future users can change the state geography to their liking. I have configured the program with a masked API key for security purposes, so future users will need to create a .env file in the same folder as the program to run appropriately (see usage instructions for more details.)
 
-    The Jambase API pulls information about the headlining artist, genre, venue name, venue address, and provides a link to purchase tickets.
+The Jambase API pulls information about the headlining artist, genre, venue name, venue address, and provides a link to purchase tickets.
 
-    The script then pings an API from Last.fm, a website dedicated to music discovery, recommendation, and social networking. The API pulls in additional data on the artists playing in the geography, including how many streams an artist has and what their top album is. 
+The script then pings an API from Last.fm, a website dedicated to music discovery, recommendation, and social networking. The API pulls in additional data on the artists playing in the geography, including how many streams an artist has and what their top album is. 
 
-    Once the APIs pull the data in .json format, the program then parses the information appropriately and joins the data together by artist name.
-    
-    One of the more challenging aspects of the script was dealing with relatively obscure or local artists that did not have stream information in last.fm. Anytime one of these artists occured, the API would corrupt the output. Thus, the script was developed to account for exceptions in the API pull. 
-    
-    Another unexpected challenge was that the API only pulls upcoming concerts and cannot look back historically. This presents a challenge for anyone hoping to do a retrospective analysis or looking to do a longitudinal analysis. To support these types of analyses, one could schedule this script to run once a day and collect this information over an extended period of time.
+Once the APIs pull the data in .json format, the program then parses the information appropriately and joins the data together by artist name.
+
+One of the more challenging aspects of the script was dealing with relatively obscure or local artists that did not have stream information in last.fm. Anytime one of these artists occured, the API would corrupt the output. Thus, the script was developed to account for exceptions in the API pull. 
+
+Another unexpected challenge was that the API only pulls upcoming concerts and cannot look back historically. This presents a challenge for anyone hoping to do a retrospective analysis or looking to do a longitudinal analysis. To support these types of analyses, one could schedule this script to run once a day and collect this information over an extended period of time.
 
 __Future applications of this data:__
 - App development for concert discovery
